@@ -10,19 +10,17 @@ const { getData, data, error} = useGetData();
 
 
 const isAuthenticated = computed(() => authStore.isAuthenticated);
-const userId= ref(null)
- userId.value = localStorage.getItem('userId');
-
-if(userId.value){
-  getData(`http://localhost:3000/api/users/profile/${userId.value}`);
+const Obtenerinfo = async () => {
+  await getData(`http://localhost:3000/api/users/profile/${localStorage.getItem('userId')}`);
 }
 
-console.log(data)
-
-const isDriver = computed(() => data.value.role === 'driver');
+const isDriver = computed(() => data.value && data.value.role === 'driver');
 
 onMounted(() => {
   authStore.checkAuthStatus();
+  Obtenerinfo()
+    contar();
+
 });
 
 const handleLogout = () => {
@@ -34,6 +32,18 @@ const goToRegister = () => {
   router.push({ name: 'login', query: { action: 'register' } });
 };
 
+const CartCount = ref(0);
+const Cart = ref([])
+
+const contar = () => {
+  if (localStorage.getItem('carrito')) {
+    Cart.value = JSON.parse(localStorage.getItem('carrito'))
+    CartCount.value = Cart.value.length;
+  }
+  else {
+    CartCount.value = 0
+  }
+}
 </script>
 
 <template>
@@ -134,7 +144,7 @@ const goToRegister = () => {
             <router-link to="/carrito" class="btn btn-link text-dark position-relative ms-2">
               <i class="bi bi-cart3 fs-5"></i>
               <span class="position-absolute top-0 start-100 badge rounded-pill bg-danger cart-badge">
-                0
+                {{CartCount}}
                 <span class="visually-hidden">productos en carrito</span>
               </span>
             </router-link>

@@ -70,7 +70,7 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'vehicle-added']);
 
-const { postData, error: postError, loading: isAdding } = usePostData();
+const { PostData, error: postError, loading: isAdding } = usePostData();
 
 const vehicleType = ref('');
 const licensePlate = ref('');
@@ -86,9 +86,10 @@ const addVehicle = async () => {
     alert('Por favor, completa todos los campos.');
     return;
   }
+  console.log(vehicleType.value, licensePlate.value)
 
   try {
-    const success = await postData(`http://localhost:3000/api/logistics/vehicle`, {
+    const success = await PostData(`http://localhost:3000/api/logistics/`, {
       user_id: props.userId,
       vehicle_type: vehicleType.value,
       license_plate: licensePlate.value,

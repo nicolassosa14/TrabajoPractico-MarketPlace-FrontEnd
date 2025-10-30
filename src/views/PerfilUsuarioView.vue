@@ -84,11 +84,11 @@ onMounted(() => {
                 </div>
                 <h3 class="card-title mb-3 fw-bold">{{ data.first_name }} {{ data.last_name }}</h3>
                 <div class="user-info">
-                    <p class="mb-2">
+                    <p class="mb-2 border border-secondary-subtle">
                         <i class="bi bi-person-badge me-2"></i>
                         <strong>Tipo de Usuario: </strong> {{ data.role.toUpperCase() }}
                     </p>
-                    <p class="mb-2">
+                    <p class="mb-2 border border-secondary-subtle">
                         <i class="bi bi-telephone me-2"></i>
                         <strong>Número: </strong>
                         <template v-if="data.phone_number">
@@ -143,7 +143,7 @@ onMounted(() => {
                         </div>
                     </div>
 
-                    <p class="mb-2">
+                    <p class="mb-2 border border-secondary-subtle">
                         <i class="bi bi-envelope me-2"></i>
                         <strong>Email: </strong> {{ data.email || 'No Agregado' }}
                     </p>

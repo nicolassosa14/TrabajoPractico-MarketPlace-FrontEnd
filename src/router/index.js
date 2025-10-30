@@ -48,6 +48,11 @@ const router = createRouter({
       name: 'perfil',
       component: () => import('../views/PerfilUsuarioView.vue'),
     },
+    {
+      path: '/carrito',
+      name: 'carrito',
+      component: () => import('../views/CartView.vue'),
+    },
   ],
 })
 

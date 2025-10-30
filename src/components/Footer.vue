@@ -72,11 +72,11 @@ const legalLinks = ref([
   transition: color 0.2s ease-in-out;
 }
 .hover-primary:hover {
-  color: var(--bs-primary) !important;
+  color: var(--bs-danger) !important;
 }
 
 .bg-secondary-subtle.hover-primary:hover {
-    background-color: var(--bs-primary) !important;
+    background-color: var(--bs-danger) !important;
     color: var(--bs-light) !important;
 }
 </style>

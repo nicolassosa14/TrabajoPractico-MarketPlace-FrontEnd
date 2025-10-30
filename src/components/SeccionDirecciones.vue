@@ -11,7 +11,7 @@
             <div class="row">
                 <div class="col-lg-6 mb-3 mb-lg-0">
                     <div class="mb-3">
-                        <input type="search" v-model="searchQuery" placeholder="Buscar dirección..." class="form-control">
+                        <input type="search" v-model="searchQuery" placeholder="Buscar dirección..." class="form-control search-direcciones">
                     </div>
                     <ul class="list-group">
                         <li v-for="(address, index) in paginatedAddresses" :key="index" 
@@ -123,9 +123,23 @@ watch(searchQuery, () => {
     background-color: #dc3545;
     border-color: #dc3545;
 }
+.direction-list-item.active:hover {
+    z-index: 2;
+    color: black;
+}
 
 .direction-list-item:hover {
     transform: scale(1.005);
     background-color: #fcfcfc;
+}
+
+.search-direcciones:focus {
+  border-color: var(--primary-red) !important;
+  box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25) !important;
+}
+
+.search-direcciones:focus + .input-group-append .btn-outline-danger {
+  border-color: var(--primary-red) !important;
+  color: var(--primary-red) !important;
 }
 </style>
