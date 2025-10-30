@@ -1,0 +1,89 @@
+:root {
+  /* Paleta de colores principales */
+  --primary-red: #e63946;
+  --light-red: #ff6b6b;
+  --dark-red: #d62828;
+  --super-light-red: #ffebee;
+  
+  /* Colores de fondo y texto */
+  --background-white: #ffffff;
+  --background-light: #f8f9fa;
+  --text-dark: #2b2d42;
+  --text-light: #8d99ae;
+  
+  /* Colores de estado */
+  --success-color: #2ecc71;
+  --warning-color: #f1c40f;
+  --error-color: #e74c3c;
+  
+  /* Sombras */
+  --box-shadow: 0 4px 6px rgba(230, 57, 70, 0.1);
+  --hover-shadow: 0 6px 12px rgba(230, 57, 70, 0.15);
+}
+
+body {
+  background-color: var(--background-white);
+  color: var(--text-dark);
+}
+
+.btn-primary {
+  background-color: var(--primary-red) !important;
+  border-color: var(--primary-red) !important;
+  color: white !important;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--dark-red) !important;
+  border-color: var(--dark-red) !important;
+  transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+  color: var(--primary-red) !important;
+  border-color: var(--primary-red) !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-red) !important;
+  color: white !important;
+}
+
+.card {
+  border-radius: 15px;
+  border: none;
+  box-shadow: var(--box-shadow);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: var(--hover-shadow);
+}
+
+.form-control:focus {
+  border-color: var(--light-red);
+  box-shadow: 0 0 0 0.2rem rgba(230, 57, 70, 0.25);
+}
+
+.nav-link {
+  color: var(--text-dark) !important;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--primary-red) !important;
+}
+
+.alert-primary {
+  background-color: var(--super-light-red);
+  border-color: var(--light-red);
+  color: var(--dark-red);
+}
+
+/* Animaciones */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
