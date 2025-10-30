@@ -92,7 +92,7 @@ const addVehicle = async () => {
       user_id: props.userId,
       vehicle_type: vehicleType.value,
       license_plate: licensePlate.value,
-      is_available: true // New vehicles are available by default
+      is_available: true
     });
 
     if (success) {

@@ -1,8 +1,6 @@
 <script setup>
 import { ref } from 'vue';
 
-
-// Placeholder for icons, assuming you have similar components
 import IconFastDelivery from '@/components/icons/IconCommunity.vue';
 import IconSafePayment from '@/components/icons/IconSupport.vue';
 import IconTopRestaurants from '@/components/icons/IconEcosystem.vue';
@@ -13,7 +11,6 @@ const badges = ref([
   { text: 'Restaurantes Top', icon: IconTopRestaurants },
 ]);
 
-// Image asset
 const heroImage = new URL('@/assets/hero.png', import.meta.url).href;
 
 </script>

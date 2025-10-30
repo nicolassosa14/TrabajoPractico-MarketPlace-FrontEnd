@@ -2,7 +2,6 @@
   <footer class="bg-light border-top py-5">
     <div class="container">
       <div class="row">
-        <!-- Brand -->
         <div class="col-md-3 mb-4">
           <div class="d-flex align-items-center gap-2 mb-3">
             <div class="d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
@@ -16,7 +15,6 @@
           </p>
         </div>
 
-        <!-- Legal -->
         <div class="col-md-3 mb-4">
           <h3 class="fw-semibold text-dark mb-4">Legal</h3>
           <ul class="list-unstyled">
@@ -28,7 +26,6 @@
           </ul>
         </div>
 
-        <!-- Contact -->
         <div class="col-md-3 mb-4">
           <h3 class="fw-semibold text-dark mb-4">Contacto</h3>
           <ul class="list-unstyled text-muted small">
@@ -38,7 +35,6 @@
           </ul>
         </div>
 
-        <!-- Social & Language -->
         <div class="col-md-3 mb-4">
           <h3 class="fw-semibold text-dark mb-4">Seguinos</h3>
           <div class="d-flex gap-3 mb-4">

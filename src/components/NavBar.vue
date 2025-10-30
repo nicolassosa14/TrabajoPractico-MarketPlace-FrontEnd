@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useGetData } from '@/composables/getData';
@@ -10,9 +10,15 @@ const { getData, data, error} = useGetData();
 
 
 const isAuthenticated = computed(() => authStore.isAuthenticated);
+const userId= ref(null)
+ userId.value = localStorage.getItem('userId');
 
-getData('http://localhost:3000/api/users/profile/'+localStorage.getItem('userId'));
-console.log(data);
+if(userId.value){
+  getData(`http://localhost:3000/api/users/profile/${userId.value}`);
+}
+
+console.log(data)
+
 const isDriver = computed(() => data.value.role === 'driver');
 
 onMounted(() => {

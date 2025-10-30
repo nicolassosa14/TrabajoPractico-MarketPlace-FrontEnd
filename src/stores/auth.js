@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { useGetData } from '@/composables/getData'
 
 export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = ref(false)
@@ -11,7 +12,6 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = userData
     userRole.value = userData.role // Set userRole
     localStorage.setItem('userId', userData.id)
-    localStorage.setItem('userRole', userData.role) // Store role in localStorage
   }
 
   function logout() {

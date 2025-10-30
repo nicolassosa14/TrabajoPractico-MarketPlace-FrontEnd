@@ -1,6 +1,6 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div class="container mt-4">
+        <h1>Pagina de Términos y Condiciones</h1>
   </div>
 </template>
 
