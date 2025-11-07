@@ -34,27 +34,15 @@ function goToAllCategories() {
       <h2 class="text-center mb-4">Categorías Destacadas</h2>
 
       <div class="row justify-content-center mt-4">
-        <div
-          v-for="cat in visibleCategories"
-          :key="cat.id"
-          class="col-6 col-md-4 col-lg-3 mb-4"
-        >
-          <div
-            class="text-center bg-white shadow-sm p-3 rounded categorycard"
-            @click="router.push(`/productos?categoria=${cat.name}`)"
-          >
-          <pre>{{ cat.image_url }}</pre>
+        <div v-for="cat in visibleCategories" :key="cat.id" class="col-6 col-md-4 col-lg-3 mb-4">
+          <div class="text-center bg-white shadow-sm p-3 rounded categorycard"
+            @click="router.push(`/productos?categoria=${cat.name}`)">
+            
 
             <a class="text-decoration-none text-dark">
-                <img
+              <img v-if="cat.image_url" :src="String(cat.image_url)" :alt="cat.name" class="img-fluid mb-2 rounded"
+                style="max-height: 120px; object-fit: cover" />
 
-                v-if="cat.image_url"
-                :src="cat.image_url"
-
-                alt="imagen categoría"
-                class="img-fluid mb-2 rounded"
-                style="max-height: 100px; object-fit: cover;"
-              />
               <h4 class="mt-2">{{ cat.name.toUpperCase() }}</h4>
             </a>
           </div>
@@ -74,11 +62,13 @@ function goToAllCategories() {
 .categorycard {
   transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
 }
+
 .categorycard:hover {
   transform: translateY(-5px);
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
   cursor: pointer;
 }
+
 .categorycard i {
   font-size: 3rem;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
