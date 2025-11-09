@@ -3,7 +3,7 @@
         <div class="d-flex justify-content-between align-items-center mb-2">
             <h5 class="fw-bold mb-0">Direcciones Agregadas</h5>
             <button @click="showAddressModal = true" class="btn btn-danger btn-sm">
-                <i class="bi bi-plus-circle me-1"></i> Agregar
+                <i class="bi bi-plus-circle me-1 text-light"></i> Agregar
             </button>
         </div>
         
@@ -123,6 +123,10 @@ watch(searchQuery, () => {
     background-color: #dc3545;
     border-color: #dc3545;
 }
+.direction-list-item.activeicon {
+    color: #fff;
+}
+
 .direction-list-item.active:hover {
     z-index: 2;
     color: black;
@@ -130,6 +134,7 @@ watch(searchQuery, () => {
 
 .direction-list-item:hover {
     transform: scale(1.005);
+    transition: background-color 0.3s ease;
     background-color: #fcfcfc;
 }
 
@@ -141,5 +146,13 @@ watch(searchQuery, () => {
 .search-direcciones:focus + .input-group-append .btn-outline-danger {
   border-color: var(--primary-red) !important;
   color: var(--primary-red) !important;
+}
+
+.direction-list-item.active .bi {
+  color: white;
+}
+
+.direction-list-item.active:hover .bi {
+  color: black;
 }
 </style>

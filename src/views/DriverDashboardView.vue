@@ -39,7 +39,7 @@
       <p class="text-center">No tienes vehículos registrados.</p>
       <div class="text-center mt-3">
         <button @click="openAddVehicleModal" class="btn btn-danger">
-            <i class="bi bi-plus-circle me-1"></i> Agregar tu primer Vehículo
+            <i class="bi bi-plus-circle me-1 text-light"></i> Agregar tu primer Vehículo
         </button>
       </div>
     </div>

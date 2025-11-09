@@ -79,7 +79,7 @@ const cargarProductosPorCategoria = async () => {
             <div v-else>
               <p class="text-danger fw-bold">No disponible</p>
             </div>
-            <a href="#" class="btn btn-primary" :class="{ 'disabled': !product.is_available }">
+            <a href="#" class="btn btn-success" :class="{ 'disabled': !product.is_available }">
               <i class="bi bi-cart-plus me-2"></i>Agregar al Carrito
             </a>
           </div>
@@ -105,5 +105,9 @@ h1 {
 .category-selector-wrapper {
   max-width: 500px;
   margin: 0 auto 30px;
+}
+.form-select:focus {
+  border-color: var(--primary-red) !important;
+  box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25) !important;
 }
 </style>

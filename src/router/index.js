@@ -39,8 +39,8 @@ const router = createRouter({
       component: () => import('../views/CategoriaListView.vue'),
     },
     {
-      path: '/driver-dashboard',
-      name: 'driver-dashboard',
+      path: '/driver',
+      name: 'driver',
       component: () => import('../views/DriverDashboardView.vue'),
     },
     {
@@ -52,6 +52,11 @@ const router = createRouter({
       path: '/carrito',
       name: 'carrito',
       component: () => import('../views/CartView.vue'),
+    },
+    {
+      path: '/favoritos',
+      name: 'favoritos',
+      component: () => import('../views/FavoritosView.vue'),
     },
   ],
 })
