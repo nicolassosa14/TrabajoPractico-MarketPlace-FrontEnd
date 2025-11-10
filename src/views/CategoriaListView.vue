@@ -150,4 +150,8 @@ h1 {
   max-width: 500px;
   margin: 0 auto 30px;
 }
+.form-select:focus {
+  border-color: var(--primary-red) !important;
+  box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25) !important;
+}
 </style>

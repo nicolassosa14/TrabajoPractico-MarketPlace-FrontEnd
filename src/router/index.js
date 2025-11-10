@@ -39,8 +39,8 @@ const router = createRouter({
       component: () => import('../views/CategoriaListView.vue'),
     },
     {
-      path: '/driver-dashboard',
-      name: 'driver-dashboard',
+      path: '/driver',
+      name: 'driver',
       component: () => import('../views/DriverDashboardView.vue'),
     },
     {

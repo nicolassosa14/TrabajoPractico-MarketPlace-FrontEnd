@@ -142,8 +142,8 @@ const buscarLocales = () => {
                   </router-link>
                 </li>
                 <li>
-                  <router-link class="dropdown-item" to="/wishlist">
-                    <i class="bi bi-heart me-2"></i><span>Lista de Deseos</span>
+                  <router-link class="dropdown-item" to="/favoritos">
+                    <i class="bi bi-heart me-2"></i><span>Locales Favoritos</span>
                   </router-link>
                 </li>
                 <li><hr class="dropdown-divider"></li>
