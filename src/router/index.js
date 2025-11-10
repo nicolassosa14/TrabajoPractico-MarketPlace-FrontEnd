@@ -53,6 +53,29 @@ const router = createRouter({
       name: 'carrito',
       component: () => import('../views/CartView.vue'),
     },
+
+
+
+{
+  path: '/locales/crear',
+  name: 'CreateLocal',
+  component: () => import('../views/CreateLocalView.vue'),
+
+},
+{
+  path: '/productos/crear',
+  name: 'CreateProduct',
+  component: () => import('../views/CrearProducto.vue'),
+
+},
+{
+  path: "/local/:vendorId/productos",
+  name: "ProductsByLocal",
+  component: () => import("../views/ProductsByLocalView.vue"),
+  props: true
+}
+
+
   ],
 })
 

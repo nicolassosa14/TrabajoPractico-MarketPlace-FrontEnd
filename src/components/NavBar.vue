@@ -44,6 +44,17 @@ const contar = () => {
     CartCount.value = 0
   }
 }
+const searchText = ref("");
+
+const buscarLocales = () => {
+  if (!searchText.value.trim()) return;
+
+  router.push({
+    name: "locales",
+    query: { search: searchText.value.trim().toLowerCase() }
+  });
+};
+
 </script>
 
 <template>
@@ -85,19 +96,21 @@ const contar = () => {
           </li>
         </ul>
 
-        <form class="d-flex me-3 search-form">
-          <div class="input-group">
-            <input
-              class="form-control search-input custom-search"
-              type="search"
-              placeholder="Buscar Locales..."
-              aria-label="Search"
-            >
-            <button class="btn btn-outline-danger" type="submit">
-              <i class="bi bi-search"></i>
-            </button>
-          </div>
-        </form>
+    <form class="d-flex me-3 search-form" @submit.prevent="buscarLocales">
+  <div class="input-group">
+    <input
+      class="form-control search-input custom-search"
+      type="search"
+      v-model="searchText"
+      placeholder="Buscar Locales..."
+      aria-label="Search"
+    >
+    <button class="btn btn-outline-danger" type="submit">
+      <i class="bi bi-search"></i>
+    </button>
+  </div>
+</form>
+
 
         <div class="d-flex align-items-center">
           <template v-if="isAuthenticated">
