@@ -74,6 +74,12 @@ const router = createRouter({
       component: () => import("../views/ProductsByLocalView.vue"),
       props: true
     },
+    {
+      path: "/administracion",
+      name: "admin-panel",
+      component: () => import("../views/AdminPanelView.vue"),
+      props: true
+    },
   ],
 })
 

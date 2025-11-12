@@ -18,6 +18,7 @@ const Obtenerinfo = async () => {
 
 const isDriver = computed(() => data.value && data.value.role === 'driver');
 const isVendor = computed(() => data.value && data.value.role === 'vendor');
+const isAdmin = computed(() => data.value && data.value.role === 'backoffice');
 
 onMounted(() => {
   authStore.checkAuthStatus();
@@ -130,6 +131,11 @@ const buscarLocales = () => {
                     <i class="bi bi-shop me-2"></i><span>Mis Órdenes (Vendedor)</span>
                   </router-link>
                 </li>
+                <li v-if="isAdmin">
+                  <router-link class="dropdown-item" to="/administracion">
+                    <i class="bi bi-person-workspace me-2"></i><span>Panel de Administracion</span>
+                  </router-link>
+                </li>
                 <li>
                   <router-link class="dropdown-item" to="/pedidos">
                     <i class="bi bi-bag me-2"></i><span>Mis Pedidos</span>
@@ -173,9 +179,6 @@ const buscarLocales = () => {
 <style scoped>
 
 .navbar i {
-  /* Use a direct color value because variables defined inside
-     a scoped :root aren't available globally. This forces icons
-     inside the navbar to stay red. */
   color: red !important;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
 }

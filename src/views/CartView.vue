@@ -61,7 +61,7 @@
                   <ul class="list-group list-group-flush">
                     <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
                       Subtotal
-                      <span>${{ Number.isFinite(Number(cartStore.totalPrecio)) ? Number(cartStore.totalPrecio).toFixed(2) : '0.00' }}</span>
+                      <span>${{ cartStore.totalPrecio ? cartStore.totalPrecio.toFixed(2) : '0.00' }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
                       Costo de envío
@@ -69,11 +69,11 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center bg-light fw-bold h5">
                       Total
-                      <span>${{ Number.isFinite(Number(cartStore.totalPrecio)) ? Number(cartStore.totalPrecio).toFixed(2) : '0.00' }}</span>
+                      <span>${{ cartStore.totalPrecio ? cartStore.totalPrecio.toFixed(2) : '0.00' }}</span>
                     </li>
                   </ul>
                   <div class="d-grid gap-2 mt-4">
-                    <button class="btn btn-primary btn-lg">Finalizar Compra</button>
+                    <button class="btn btn-primary btn-lg text-success">Finalizar Compra</button>
                     <button class="btn btn-outline-danger" @click="cartStore.vaciarCarrito()">Vaciar Carrito</button>
                   </div>
                 </div>
