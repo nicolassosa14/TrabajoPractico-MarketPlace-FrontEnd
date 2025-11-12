@@ -37,9 +37,9 @@
                   <td class="text-center">${{ (item.price ?? item.precio) }}</td>
                   <td>
                     <div class="input-group justify-content-center" style="width: 120px; margin: auto;">
-                      <button class="btn btn-outline-primary btn-sm" @click="decreaseQuantity(item)">-</button>
+                      <button class="btn btn-outline-danger btn-sm" @click="decreaseQuantity(item)">-</button>
                       <input type="text" class="form-control text-center" :value="item.cantidad" readonly>
-                      <button class="btn btn-outline-primary btn-sm" @click="increaseQuantity(item)">+</button>
+                      <button class="btn btn-outline-danger btn-sm" @click="increaseQuantity(item)">+</button>
                     </div>
                   </td>
                   <td class="text-end fw-bold">${{ ((Number(item.price ?? item.precio) || 0) * (Number(item.cantidad) || 0)).toFixed(2) }}</td>
@@ -73,7 +73,12 @@
                     </li>
                   </ul>
                   <div class="d-grid gap-2 mt-4">
-                    <button class="btn btn-primary btn-lg text-success">Finalizar Compra</button>
+                    <RouterLink 
+                      to="/payments" 
+                      class="btn btn-outline-success btn-lg" 
+                      @click=""
+                      
+                      >Finalizar Compra</RouterLink>
                     <button class="btn btn-outline-danger" @click="cartStore.vaciarCarrito()">Vaciar Carrito</button>
                   </div>
                 </div>
@@ -103,6 +108,8 @@ const decreaseQuantity = (item) => {
     cartStore.eliminarDelCarrito(item.id);
   }
 };
+
+//FALTA TODA LA LOGICA DE CREAR ORDEN Y REDIRECCIONAR A PAGOS :) (JULIAN)
 
 
 </script>
