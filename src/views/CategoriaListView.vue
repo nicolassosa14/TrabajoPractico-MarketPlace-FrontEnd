@@ -2,6 +2,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '@/api/api'
+import { useCartStore } from '@/stores/CartStore'
 
 const route = useRoute()
 const categories = ref([])
@@ -11,6 +12,7 @@ const loadingProducts = ref(false)
 const errorProducts = ref(null)
 const vendorId = ref(route.params.id || null)
 const vendorName = ref('')
+const cartStore = useCartStore()
 
 const cargarCategorias = async () => {
   try {
@@ -54,6 +56,17 @@ const cargarProductosPorVendor = async () => {
   }
 }
 
+const agregarAlCarrito = (product) => {
+  const item = {
+    id: product.id,
+    nombre: product.name,
+    precio: product.price,
+    imagen: product.Image_url,
+    descripcion: product.description,
+    cantidad: 1
+  }
+  cartStore.agregarAlCarrito(item)
+}
 
 onMounted(async () => {
   await cargarCategorias()
@@ -117,9 +130,9 @@ watch(selectedCategory, async () => {
               {{ product.is_available ? 'Disponible' : 'No disponible' }}
             </p>
 
-            <a href="#" class="btn btn-primary" :class="{ disabled: !product.is_available }">
+            <button @click.prevent="agregarAlCarrito(product)" class="btn btn-primary" :class="{ disabled: !product.is_available }">
               <i class="bi bi-cart-plus me-2"></i>Agregar al carrito
-            </a>
+            </button>
           </div>
         </div>
       </div>
