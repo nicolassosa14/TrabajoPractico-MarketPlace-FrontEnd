@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref} from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useCartStore } from '@/stores/CartStore';
@@ -8,7 +8,7 @@ import { useGetData } from '@/composables/getData';
 const router = useRouter();
 const authStore = useAuthStore();
 const cartStore = useCartStore();
-const { getData, data, error} = useGetData();
+const { getData, data, error } = useGetData();
 
 
 const isAuthenticated = computed(() => authStore.isAuthenticated);
@@ -50,20 +50,13 @@ const buscarLocales = () => {
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
     <div class="container">
-        <router-link class="navbar-brand d-flex align-items-center" to="/">
+      <router-link class="navbar-brand d-flex align-items-center" to="/">
         <img style="max-width: 45px; margin-right: -7px;" src="/logo.png" alt="">
-        <span class="brand-text ms-0">andaditosApp</span>
+        <span class="brand-text ms-0">MandaditosApp</span>
       </router-link>
 
-      <button
-        class="navbar-toggler border-0"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarContent"
-        aria-controls="navbarContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
@@ -81,37 +74,27 @@ const buscarLocales = () => {
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/categorias">
-              Categorías
+              Productos
             </router-link>
           </li>
         </ul>
 
-    <form class="d-flex me-3 search-form" @submit.prevent="buscarLocales">
-  <div class="input-group">
-    <input
-      class="form-control search-input custom-search"
-      type="search"
-      v-model="searchText"
-      placeholder="Buscar Locales..."
-      aria-label="Search"
-    >
-    <button class="btn btn-outline-danger" type="submit">
-      <i class="bi bi-search"></i>
-    </button>
-  </div>
-</form>
+        <form class="d-flex me-3 search-form" @submit.prevent="buscarLocales">
+          <div class="input-group">
+            <input class="form-control search-input custom-search" type="search" v-model="searchText"
+              placeholder="Buscar Locales..." aria-label="Search">
+            <button class="btn btn-outline-danger" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
 
 
         <div class="d-flex align-items-center">
           <template v-if="isAuthenticated">
             <div class="dropdown">
-              <button
-                class="btn btn-link text-dark text-decoration-none dropdown-toggle"
-                type="button"
-                id="userMenu"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
+              <button class="btn btn-link text-dark text-decoration-none dropdown-toggle" type="button" id="userMenu"
+                data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-person-circle me-1"></i>
                 Mi Cuenta
               </button>
@@ -131,6 +114,11 @@ const buscarLocales = () => {
                     <i class="bi bi-shop me-2"></i><span>Mis Órdenes (Vendedor)</span>
                   </router-link>
                 </li>
+                <li v-if="isVendor">
+                  <router-link class="dropdown-item" to="/mi-local">
+                    <i class="bi bi-shop me-2"></i><span>Ver mi local</span>
+                  </router-link>
+                </li>
                 <li v-if="isAdmin">
                   <router-link class="dropdown-item" to="/administracion">
                     <i class="bi bi-person-workspace me-2"></i><span>Panel de Administracion</span>
@@ -146,7 +134,9 @@ const buscarLocales = () => {
                     <i class="bi bi-heart me-2"></i><span>Locales Favoritos</span>
                   </router-link>
                 </li>
-                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
                 <li>
                   <button class="dropdown-item text-danger" @click="handleLogout">
                     <i class="bi bi-box-arrow-right me-2"></i><span>Cerrar Sesión</span>
@@ -156,8 +146,9 @@ const buscarLocales = () => {
             </div>
             <router-link to="/carrito" class="btn btn-link text-dark position-relative ms-2">
               <i class="bi bi-cart3 fs-5"></i>
-              <span v-if="cartStore.totalItems > 0" class="position-absolute top-0 start-100 badge rounded-pill bg-danger cart-badge">
-                {{cartStore.totalItems}}
+              <span v-if="cartStore.totalItems > 0"
+                class="position-absolute top-0 start-100 badge rounded-pill bg-danger cart-badge">
+                {{ cartStore.totalItems }}
                 <span class="visually-hidden">productos en carrito</span>
               </span>
             </router-link>
@@ -177,11 +168,11 @@ const buscarLocales = () => {
 </template>
 
 <style scoped>
-
 .navbar i {
   color: red !important;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
 }
+
 :root {
   --primary-red: #ff6b6b;
   --dark-red: #fa5252;
@@ -195,7 +186,8 @@ const buscarLocales = () => {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1030; /* A common z-index for navbars */
+  z-index: 1030;
+  /* A common z-index for navbars */
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
   background-color: var(--light-red) !important;
@@ -259,18 +251,18 @@ const buscarLocales = () => {
   background-color: #f8f9fa;
 }
 
-.dropdown-item > i,
-.dropdown-item > span {
+.dropdown-item>i,
+.dropdown-item>span {
   display: inline-block;
   vertical-align: middle;
   transition: transform 0.2s ease;
 }
 
-.dropdown-item:hover > i {
+.dropdown-item:hover>i {
   transform: translateX(5px) scale(1.1);
 }
 
-.dropdown-item:hover > span {
+.dropdown-item:hover>span {
   transform: translateX(5px);
 }
 
@@ -286,7 +278,7 @@ const buscarLocales = () => {
   box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25) !important;
 }
 
-.custom-search:focus + .input-group-append .btn-outline-danger {
+.custom-search:focus+.input-group-append .btn-outline-danger {
   border-color: var(--primary-red) !important;
   color: var(--primary-red) !important;
 }

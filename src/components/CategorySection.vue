@@ -24,7 +24,7 @@ onMounted(async () => {
 })
 
 function goToAllCategories() {
-  router.push('/categorias') // redirige a la vista general de categorías
+  router.push('/categorias')
 }
 </script>
 
@@ -36,8 +36,8 @@ function goToAllCategories() {
       <div class="row justify-content-center mt-4">
         <div v-for="cat in visibleCategories" :key="cat.id" class="col-6 col-md-4 col-lg-3 mb-4">
           <div class="text-center bg-white shadow-sm p-3 rounded categorycard"
-            @click="router.push(`/productos?categoria=${cat.name}`)">
-            
+            @click="router.push({ path: '/categorias', query: { categoria: cat.name } })">
+
 
             <a class="text-decoration-none text-dark">
               <img v-if="cat.image_url" :src="String(cat.image_url)" :alt="cat.name" class="img-fluid mb-2 rounded"

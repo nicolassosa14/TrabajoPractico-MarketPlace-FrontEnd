@@ -76,7 +76,7 @@ const router = createRouter({
       component: () => import('../views/CrearProducto.vue'),
     },
     {
-      path: "/OrdenesVendedorView",
+      path: "/vendor-orders",
       name: "OrdenesVendedorView",
       component: () => import("../views/OrdenesVendedorView.vue"),
     },
@@ -92,6 +92,11 @@ const router = createRouter({
       component: () => import("../views/AdminPanelView.vue"),
       props: true
     },
+    {
+      path: "/mi-local",  
+      name: "MiLocalView",
+      component: () => import("../views/MiLocalView.vue"),
+    }
   ],
 })
 
