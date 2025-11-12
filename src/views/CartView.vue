@@ -72,8 +72,20 @@
                       <span>${{ cartStore.totalPrecio ? cartStore.totalPrecio.toFixed(2) : '0.00' }}</span>
                     </li>
                   </ul>
+
+                  <!-- Mostrar errores -->
+                  <div v-if="cartStore.error" class="alert alert-danger mt-3" role="alert">
+                    {{ cartStore.error }}
+                  </div>
+
                   <div class="d-grid gap-2 mt-4">
-                    <button class="btn btn-primary btn-lg text-success">Finalizar Compra</button>
+                    <button
+                      class="btn btn-primary btn-lg text-success"
+                      @click="mostrarModalDireccion"
+                      :disabled="cartStore.loading">
+                      <span v-if="cartStore.loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      {{ cartStore.loading ? 'Procesando...' : 'Finalizar Compra' }}
+                    </button>
                     <button class="btn btn-outline-danger" @click="cartStore.vaciarCarrito()">Vaciar Carrito</button>
                   </div>
                 </div>
@@ -83,14 +95,54 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal para ingresar dirección -->
+    <div class="modal" :class="{ show: mostrarModal }" :style="{ display: mostrarModal ? 'block' : 'none' }">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Dirección de Envío</h5>
+            <button type="button" class="btn-close" @click="cerrarModal"></button>
+          </div>
+          <div class="modal-body">
+            <label for="direccion" class="form-label">Ingresa tu dirección de envío:</label>
+            <textarea
+              id="direccion"
+              v-model="direccionIngresada"
+              class="form-control"
+              rows="3"
+              placeholder="Calle, número, apartamento, ciudad...">
+            </textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="cerrarModal">Cancelar</button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="procesarCompra"
+              :disabled="cartStore.loading">
+              {{ cartStore.loading ? 'Procesando...' : 'Confirmar Compra' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Backdrop del modal -->
+    <div v-if="mostrarModal" class="modal-backdrop fade show"></div>
   </div>
 </template>
 
 <script setup>
 import { useCartStore } from '@/stores/CartStore';
 import { RouterLink } from 'vue-router';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const cartStore = useCartStore();
+const router = useRouter();
+const mostrarModal = ref(false);
+const direccionIngresada = ref('');
 
 const increaseQuantity = (item) => {
   cartStore.actualizarCantidad(item.id, item.cantidad + 1);
@@ -104,7 +156,25 @@ const decreaseQuantity = (item) => {
   }
 };
 
+const mostrarModalDireccion = () => {
+  direccionIngresada.value = '';
+  mostrarModal.value = true;
+};
 
+const cerrarModal = () => {
+  mostrarModal.value = false;
+};
+
+const procesarCompra = async () => {
+  try {
+    await cartStore.finalizarCompra(direccionIngresada.value);
+    cerrarModal();
+    // Redirigir a página de confirmación o inicio
+    router.push('/confirmacion'); // Ajusta según tu ruta
+  } catch (err) {
+    console.error('Error en compra:', err);
+  }
+};
 </script>
 
 <style scoped>
@@ -119,6 +189,7 @@ const decreaseQuantity = (item) => {
 .btn-primary {
   background-color: var(--primary-red);
   border-color: var(--primary-red);
+  color: green;
 }
 
 .btn-primary:hover {
@@ -126,10 +197,14 @@ const decreaseQuantity = (item) => {
   border-color: var(--dark-red);
 }
 
-.fade-enter-active {
-  transition: opacity 0.5s ease;
+.modal-footer .btn-secondary {
+  background-color: var(--text-light);
+  border-color: var(--text-light);
+  color: black;
 }
-.fade-enter-from {
-  opacity: 0;
+
+.modal-footer .btn-secondary:hover {
+  background-color: var(--text-dark);
+  border-color: var(--text-dark);
 }
 </style>
