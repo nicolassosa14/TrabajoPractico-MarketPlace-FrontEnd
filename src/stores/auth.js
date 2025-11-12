@@ -9,13 +9,13 @@ export const useAuthStore = defineStore('auth', () => {
   function login(userData) {
     isAuthenticated.value = true
     user.value = userData
-    localStorage.setem('userId', userData.id)
+    localStorage.setItem('userId', userData.id)
   }
 
   function logout() {
     isAuthenticated.value = false
     user.value = null
-    localStorage.remeItem('userId')
+    localStorage.removeItem('userId')
   }
 
   function checkAuthStatus() {

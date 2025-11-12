@@ -50,7 +50,13 @@ export const useCartStore = defineStore('carrito', () => {
     });
 
     const totalPrecio = computed(() => {
-        return items.value.reduce((total, item) => total + (item.precio * item.cantidad), 0);
+        return items.value.reduce((total, item) => {
+            // Support both `precio` and `price` field names (data comes from different places).
+            const price = Number(item.precio ?? item.price ?? 0);
+            const qty = Number(item.cantidad ?? 0);
+            const line = (Number.isFinite(price) && Number.isFinite(qty)) ? price * qty : 0;
+            return total + line;
+        }, 0);
     });
 
     return {

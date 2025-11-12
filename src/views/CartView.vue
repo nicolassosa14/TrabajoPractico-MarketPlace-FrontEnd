@@ -34,7 +34,7 @@
                       </div>
                     </div>
                   </td>
-                  <td class="text-center">${{ item.price }}</td>
+                  <td class="text-center">${{ (item.price ?? item.precio) }}</td>
                   <td>
                     <div class="input-group justify-content-center" style="width: 120px; margin: auto;">
                       <button class="btn btn-outline-primary btn-sm" @click="decreaseQuantity(item)">-</button>
@@ -42,7 +42,7 @@
                       <button class="btn btn-outline-primary btn-sm" @click="increaseQuantity(item)">+</button>
                     </div>
                   </td>
-                  <td class="text-end fw-bold">${{ (item.price * item.cantidad).toFixed(2) }}</td>
+                  <td class="text-end fw-bold">${{ ((Number(item.price ?? item.precio) || 0) * (Number(item.cantidad) || 0)).toFixed(2) }}</td>
                   <td class="text-center">
                     <button class="btn btn-danger btn-sm rounded-circle" @click="cartStore.eliminarDelCarrito(item.id)">
                       <i class="bi bi-trash"></i>
@@ -61,7 +61,7 @@
                   <ul class="list-group list-group-flush">
                     <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
                       Subtotal
-                      <span>${{ cartStore.totalPrecio.toFixed(2) }}</span>
+                      <span>${{ Number.isFinite(Number(cartStore.totalPrecio)) ? Number(cartStore.totalPrecio).toFixed(2) : '0.00' }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
                       Costo de envío
@@ -69,7 +69,7 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center bg-light fw-bold h5">
                       Total
-                      <span>${{ cartStore.totalPrecio.toFixed(2) }}</span>
+                      <span>${{ Number.isFinite(Number(cartStore.totalPrecio)) ? Number(cartStore.totalPrecio).toFixed(2) : '0.00' }}</span>
                     </li>
                   </ul>
                   <div class="d-grid gap-2 mt-4">
@@ -103,6 +103,8 @@ const decreaseQuantity = (item) => {
     cartStore.eliminarDelCarrito(item.id);
   }
 };
+
+
 </script>
 
 <style scoped>

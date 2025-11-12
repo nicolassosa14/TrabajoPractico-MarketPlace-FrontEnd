@@ -171,7 +171,12 @@ const buscarLocales = () => {
 </template>
 
 <style scoped>
-i {
+
+.navbar i {
+  /* Use a direct color value because variables defined inside
+     a scoped :root aren't available globally. This forces icons
+     inside the navbar to stay red. */
+  color: red !important;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
 }
 :root {
