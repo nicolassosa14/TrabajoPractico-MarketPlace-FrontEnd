@@ -2,10 +2,12 @@
 import { computed, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { useCartStore } from '@/stores/CartStore';
 import { useGetData } from '@/composables/getData';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const cartStore = useCartStore();
 const { getData, data, error} = useGetData();
 
 
@@ -15,12 +17,11 @@ const Obtenerinfo = async () => {
 }
 
 const isDriver = computed(() => data.value && data.value.role === 'driver');
+const isVendor = computed(() => data.value && data.value.role === 'vendor');
 
 onMounted(() => {
   authStore.checkAuthStatus();
   Obtenerinfo()
-    contar();
-
 });
 
 const handleLogout = () => {
@@ -32,18 +33,6 @@ const goToRegister = () => {
   router.push({ name: 'login', query: { action: 'register' } });
 };
 
-const CartCount = ref(0);
-const Cart = ref([])
-
-const contar = () => {
-  if (localStorage.getItem('carrito')) {
-    Cart.value = JSON.parse(localStorage.getItem('carrito'))
-    CartCount.value = Cart.value.length;
-  }
-  else {
-    CartCount.value = 0
-  }
-}
 const searchText = ref("");
 
 const buscarLocales = () => {
@@ -136,6 +125,11 @@ const buscarLocales = () => {
                     <i class="bi bi-truck me-2"></i><span>Panel de Conductor</span>
                   </router-link>
                 </li>
+                <li v-if="isVendor">
+                  <router-link class="dropdown-item" to="/vendor-orders">
+                    <i class="bi bi-shop me-2"></i><span>Mis Órdenes (Vendedor)</span>
+                  </router-link>
+                </li>
                 <li>
                   <router-link class="dropdown-item" to="/pedidos">
                     <i class="bi bi-bag me-2"></i><span>Mis Pedidos</span>
@@ -156,8 +150,8 @@ const buscarLocales = () => {
             </div>
             <router-link to="/carrito" class="btn btn-link text-dark position-relative ms-2">
               <i class="bi bi-cart3 fs-5"></i>
-              <span class="position-absolute top-0 start-100 badge rounded-pill bg-danger cart-badge">
-                {{CartCount}}
+              <span v-if="cartStore.totalItems > 0" class="position-absolute top-0 start-100 badge rounded-pill bg-danger cart-badge">
+                {{cartStore.totalItems}}
                 <span class="visually-hidden">productos en carrito</span>
               </span>
             </router-link>
