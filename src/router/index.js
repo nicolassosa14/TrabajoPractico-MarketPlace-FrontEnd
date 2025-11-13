@@ -3,6 +3,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+
+    {
+      path: '/payments',
+      name: 'payments',
+      component: () => import('../views/PaymentsView.vue'),
+    },
+
     {
       path: '/',
       name: 'home',
@@ -39,8 +46,8 @@ const router = createRouter({
       component: () => import('../views/CategoriaListView.vue'),
     },
     {
-      path: '/driver-dashboard',
-      name: 'driver-dashboard',
+      path: '/driver',
+      name: 'driver',
       component: () => import('../views/DriverDashboardView.vue'),
     },
     {
@@ -53,6 +60,43 @@ const router = createRouter({
       name: 'carrito',
       component: () => import('../views/CartView.vue'),
     },
+    {
+      path: '/favoritos',
+      name: 'favoritos',
+      component: () => import('../views/FavoritosView.vue'),
+    },
+    {
+      path: '/locales/crear',
+      name: 'CreateLocal',
+      component: () => import('../views/CreateLocalView.vue'),
+    },
+    {
+      path: '/productos/crear',
+      name: 'CreateProduct',
+      component: () => import('../views/CrearProducto.vue'),
+    },
+    {
+      path: "/vendor-orders",
+      name: "OrdenesVendedorView",
+      component: () => import("../views/OrdenesVendedorView.vue"),
+    },
+    {
+      path: "/local/:vendorId/productos",
+      name: "ProductsByLocal",
+      component: () => import("../views/ProductsByLocalView.vue"),
+      props: true
+    },
+    {
+      path: "/administracion",
+      name: "admin-panel",
+      component: () => import("../views/AdminPanelView.vue"),
+      props: true
+    },
+    {
+      path: "/mi-local",  
+      name: "MiLocalView",
+      component: () => import("../views/MiLocalView.vue"),
+    }
   ],
 })
 

@@ -28,20 +28,20 @@ const closePhoneModal = () => {
 
 const updatePhoneNumber = async () => {
     if (!phoneNumber.value) return;
-    
+
     isUpdating.value = true;
     const userId = localStorage.getItem('userId');
-    
+
     try {
         const response = await patchData(`http://localhost:3000/api/users/profile`, {
             phone_number: phoneNumber.value,
             user_id: userId
         });
-        
+
         if (response.error) {
             throw new Error(response.error);
         }
-        
+
         await refreshUserData();
         closePhoneModal();
     } catch (error) {
@@ -103,7 +103,7 @@ onMounted(() => {
                             </button>
                         </template>
                     </p>
-                    
+
                     <!-- Modal para agregar/editar número de teléfono -->
                     <div v-if="showPhoneModal" class="modal fade show" style="display: block; background: rgba(0,0,0,0.5)">
                         <div class="modal-dialog modal-dialog-centered">
@@ -129,9 +129,9 @@ onMounted(() => {
                                     <button type="button" class="btn btn-secondary" @click="closePhoneModal" :disabled="isUpdating">
                                         Cancelar
                                     </button>
-                                    <button 
-                                        type="button" 
-                                        class="btn btn-danger" 
+                                    <button
+                                        type="button"
+                                        class="btn btn-danger"
                                         @click="updatePhoneNumber"
                                         :disabled="!phoneNumber || isUpdating"
                                     >
@@ -148,11 +148,11 @@ onMounted(() => {
                         <strong>Email: </strong> {{ data.email || 'No Agregado' }}
                     </p>
                 </div>
-                
-                <SeccionDirecciones 
+
+                <SeccionDirecciones
                     v-if="data.addresses && data.user_id"
-                    :addresses="data.addresses" 
-                    :user-id="data.user_id" 
+                    :addresses="data.addresses"
+                    :user-id="data.user_id"
                     @addresses-updated="refreshUserData"
                 />
 

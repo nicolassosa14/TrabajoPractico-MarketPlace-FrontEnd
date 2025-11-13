@@ -22,7 +22,7 @@ const heroImage = new URL('@/assets/hero.png', import.meta.url).href;
               Pedí de tus comercios favoritos al mejor precio del mercado.
             </p>
           </div>
-          <div class="d-flex flex-wrap gap-3 mb-4">
+          <div class="d-flex flex-wrap gap-3 mb-4 text-danger">
             <div class="d-flex align-items-center border border-danger rounded p-2">
               <i class="bi bi-lightning-charge-fill me-1"></i> 
               <span>
@@ -62,7 +62,5 @@ const heroImage = new URL('@/assets/hero.png', import.meta.url).href;
 </template>
 
 <style >
-i{
-  color: red;
-}
+
 </style>
