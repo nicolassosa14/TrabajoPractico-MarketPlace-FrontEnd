@@ -65,15 +65,14 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
                       Costo de envío
-                      <span class="text-success">Gratis</span>
+                      <span>$1500.00</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center bg-light fw-bold h5">
                       Total
-                      <span>${{ cartStore.totalPrecio ? cartStore.totalPrecio.toFixed(2) : '0.00' }}</span>
+                      <span>${{ cartStore.totalPrecio ? (cartStore.totalPrecio + 1500).toFixed(2) : '0.00' }}</span>
                     </li>
                   </ul>
 
-                  <!-- Mostrar errores -->
                   <div v-if="cartStore.error" class="alert alert-danger mt-3" role="alert">
                     {{ cartStore.error }}
                   </div>
@@ -96,7 +95,6 @@
       </div>
     </div>
 
-    <!-- Modal para ingresar dirección -->
     <div class="modal" :class="{ show: mostrarModal }" :style="{ display: mostrarModal ? 'block' : 'none' }">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -105,31 +103,46 @@
             <button type="button" class="btn-close" @click="cerrarModal"></button>
           </div>
           <div class="modal-body">
-            <label for="direccion" class="form-label">Dirección:</label>
-            <input
-              id="direccion"
-              v-model="direccionIngresada"
-              class="form-control"
-              placeholder="Calle y número">
+            <label for="direccionSeleccion" class="form-label">Seleccionar dirección guardada (opcional):</label>
+            <select id="direccionSeleccion" v-model="selectedAddressId" class="form-select mb-3">
+              <option value="">-- Ingresar nueva dirección --</option>
+              <option v-for="(addr, idx) in addresses" :key="idx" :value="addr.id ?? addr._id ?? addr.address_id">
+                {{ addr.street_address }}{{ addr.city ? ', ' + addr.city : '' }}{{ addr.postal_code ? ' - ' + addr.postal_code : '' }}
+              </option>
+            </select>
 
-            <label for="ciudad" class="form-label mt-3">Ciudad:</label>
-            <input
-              id="ciudad"
-              v-model="ciudadIngresada"
-              class="form-control"
-              placeholder="Ciudad">
+            <div v-if="selectedAddress">
+              <label class="form-label">Dirección seleccionada:</label>
+              <input type="text" class="form-control" :value="selectedAddress.street_address + (selectedAddress.city ? ', ' + selectedAddress.city : '') + (selectedAddress.postal_code ? ', ' + selectedAddress.postal_code : '')" readonly />
+            </div>
 
-            <label for="codigoPostal" class="form-label mt-3">Código Postal:</label>
-            <input
-              id="codigoPostal"
-              v-model="codigoPostalIngresado"
-              class="form-control"
-              placeholder="Código Postal">
+            <div v-else>
+              <label for="direccion" class="form-label">Dirección:</label>
+              <input
+                id="direccion"
+                v-model="direccionIngresada"
+                class="form-control"
+                placeholder="Calle y número">
+
+              <label for="ciudad" class="form-label mt-3">Ciudad:</label>
+              <input
+                id="ciudad"
+                v-model="ciudadIngresada"
+                class="form-control"
+                placeholder="Ciudad">
+
+              <label for="codigoPostal" class="form-label mt-3">Código Postal:</label>
+              <input
+                id="codigoPostal"
+                v-model="codigoPostalIngresado"
+                class="form-control"
+                placeholder="Código Postal">
+            </div>
 
             <label class="form-label mt-3">Driver asignado</label>
             <div class="d-flex align-items-center gap-2">
               <span v-if="asignandoDriver" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-              <input type="text" class="form-control" :value="driverAsignado" readonly />
+              <input disabled type="text" class="form-control" :value="driverAsignado" readonly />
               <button type="button" class="btn btn-outline-secondary btn-sm" @click="obtenerDriverAleatorio" :disabled="asignandoDriver">
                 Cambiar
               </button>
@@ -141,7 +154,7 @@
               type="button"
               class="btn btn-primary"
               @click="procesarCompra"
-              :disabled="cartStore.loading || !driverAsignado.trim()">
+              :disabled="cartStore.loading || !driverAsignado.trim() || (!selectedAddress && !(direccionIngresada.trim() && ciudadIngresada.trim()))">
               {{ cartStore.loading ? 'Procesando...' : 'Confirmar Compra' }}
             </button>
           </div>
@@ -157,9 +170,10 @@
 <script setup>
 import { useCartStore } from '@/stores/CartStore';
 import { RouterLink } from 'vue-router';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios'; // agregado
+import { useAuthStore } from '@/stores/auth';
 
 const cartStore = useCartStore();
 const router = useRouter();
@@ -169,6 +183,14 @@ const ciudadIngresada = ref('');
 const codigoPostalIngresado = ref('');
 const driverAsignado = ref(''); // nuevo
 const asignandoDriver = ref(false); // nuevo: estado mientras se elige
+const addresses = ref([]);
+const selectedAddressId = ref('');
+const authStore = useAuthStore();
+
+const selectedAddress = computed(() => {
+  if (!selectedAddressId.value || !addresses.value) return null;
+  return addresses.value.find(a => (a.id === selectedAddressId.value) || (a._id === selectedAddressId.value) || (a.address_id === selectedAddressId.value));
+});
 
 const increaseQuantity = (item) => {
   cartStore.actualizarCantidad(item.id, item.cantidad + 1);
@@ -212,8 +234,25 @@ const mostrarModalDireccion = async () => {
   ciudadIngresada.value = '';
   codigoPostalIngresado.value = '';
   driverAsignado.value = '';
+  selectedAddressId.value = '';
+  addresses.value = [];
   mostrarModal.value = true;
-  await obtenerDriverAleatorio(); // asigna driver automáticamente al abrir modal
+  await obtenerDriverAleatorio();
+  await fetchAddressesForUser();
+};
+
+const fetchAddressesForUser = async () => {
+  try {
+    const userId = authStore.user?.id || localStorage.getItem('userId');
+    if (!userId) return;
+    const res = await axios.get(`http://localhost:3000/api/users/profile-with-addresses/${userId}`);
+    const data = res.data;
+    if (data && Array.isArray(data.addresses)) {
+      addresses.value = data.addresses;
+    }
+  } catch (e) {
+    console.warn('No se pudieron cargar direcciones del usuario', e);
+  }
 };
 
 const cerrarModal = () => {
@@ -222,8 +261,15 @@ const cerrarModal = () => {
 
 const procesarCompra = async () => {
   try {
-    const direccionCompleta = `${direccionIngresada.value}, ${ciudadIngresada.value}, ${codigoPostalIngresado.value}`;
-    const resultado = await cartStore.finalizarCompra(direccionCompleta, driverAsignado.value);
+    let direccionCompleta = '';
+    const useAddressId = selectedAddressId.value && selectedAddress.value;
+    if (useAddressId) {
+      direccionCompleta = `${selectedAddress.value.street_address || ''}${selectedAddress.value.city ? ', ' + selectedAddress.value.city : ''}${selectedAddress.value.postal_code ? ', ' + selectedAddress.value.postal_code : ''}`;
+    } else {
+      direccionCompleta = `${direccionIngresada.value}, ${ciudadIngresada.value}, ${codigoPostalIngresado.value}`;
+    }
+
+    const resultado = await cartStore.finalizarCompra(direccionCompleta, driverAsignado.value, useAddressId ? selectedAddressId.value : null);
 
     if (resultado && resultado.orderId) {
       cerrarModal();

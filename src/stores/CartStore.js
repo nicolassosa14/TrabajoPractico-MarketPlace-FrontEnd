@@ -47,7 +47,7 @@ export const useCartStore = defineStore('carrito', () => {
         localStorage.setItem('carrito', JSON.stringify(items.value));
     };
 
-    const finalizarCompra = async (direccionCompleta, driverId) => {
+    const finalizarCompra = async (direccionCompleta, driverId, addressId = null) => {
         if (items.value.length === 0) {
             error.value = 'Tu carrito está vacío';
             return null;
@@ -87,9 +87,9 @@ export const useCartStore = defineStore('carrito', () => {
             const orderId = 'ORD-' + Date.now();
             const pedido = {
                 orderId,
-                userId: 'user-123',
+                userId: localStorage.getItem('userId') || 'user-123',
                 vendorId: String(items.value[0]?.vendorId ?? 'vendor-001'),
-                addressId: 'addr-' + Date.now(),
+                addressId: addressId || ('addr-' + Date.now()),
                 subtotal: Number(subtotal),
                 deliveryFee: Number(deliveryFee),
                 discountApplied: Number(discountApplied),

@@ -17,7 +17,7 @@
               <p><strong>Subtotal:</strong> ${{ orderActual.subtotal.toFixed(2) }}</p>
               <p><strong>Costo de envío:</strong> $1500.00</p>
               <p class="fw-bold" style="font-size: 1.2rem; color: var(--primary-red);">
-                Total: ${{ (orderActual.totalAmount + 1500).toFixed(2) }}
+                Total: ${{ (orderActual.totalAmount).toFixed(2) }}
               </p>
             </div>
           </div>
@@ -76,13 +76,13 @@
           <!-- Botones -->
           <div class="d-grid gap-2 mt-4">
             <button
-              class="btn btn-primary btn-lg"
+              class="btn btn-success btn-lg"
               @click="confirmarPago"
               :disabled="!metodoPago || procesando">
               <span v-if="procesando" class="spinner-border spinner-border-sm me-2"></span>
               {{ procesando ? 'Procesando...' : 'Pagar Ahora' }}
             </button>
-            <button class="btn btn-outline-secondary" @click="volver">Volver al Carrito</button>
+            <button class="btn btn-outline-danger" @click="volver">Volver al Carrito</button>
           </div>
         </div>
 
@@ -167,10 +167,6 @@ const volver = () => {
   background-color: var(--primary-red);
   border-color: var(--primary-red);
   color: black;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: var(--dark-red);
 }
 
 .btn-primary:disabled {
