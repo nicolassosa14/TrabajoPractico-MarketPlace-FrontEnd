@@ -79,7 +79,13 @@
                   </div>
 
                   <div class="d-grid gap-2 mt-4">
-                    <button class="btn btn-primary btn-lg text-success">Finalizar Compra</button>
+                    <button
+                      class="btn btn-primary btn-lg text-success"
+                      @click="mostrarModalDireccion"
+                      :disabled="cartStore.loading">
+                      <span v-if="cartStore.loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      {{ cartStore.loading ? 'Procesando...' : 'Finalizar Compra' }}
+                    </button>
                     <button class="btn btn-outline-danger" @click="cartStore.vaciarCarrito()">Vaciar Carrito</button>
                   </div>
                 </div>
@@ -99,14 +105,35 @@
             <button type="button" class="btn-close" @click="cerrarModal"></button>
           </div>
           <div class="modal-body">
-            <label for="direccion" class="form-label">Ingresa tu dirección de envío:</label>
-            <textarea
+            <label for="direccion" class="form-label">Dirección:</label>
+            <input
               id="direccion"
               v-model="direccionIngresada"
               class="form-control"
-              rows="3"
-              placeholder="Calle, número, apartamento, ciudad...">
-            </textarea>
+              placeholder="Calle y número">
+
+            <label for="ciudad" class="form-label mt-3">Ciudad:</label>
+            <input
+              id="ciudad"
+              v-model="ciudadIngresada"
+              class="form-control"
+              placeholder="Ciudad">
+
+            <label for="codigoPostal" class="form-label mt-3">Código Postal:</label>
+            <input
+              id="codigoPostal"
+              v-model="codigoPostalIngresado"
+              class="form-control"
+              placeholder="Código Postal">
+
+            <label class="form-label mt-3">Driver asignado</label>
+            <div class="d-flex align-items-center gap-2">
+              <span v-if="asignandoDriver" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              <input type="text" class="form-control" :value="driverAsignado" readonly />
+              <button type="button" class="btn btn-outline-secondary btn-sm" @click="obtenerDriverAleatorio" :disabled="asignandoDriver">
+                Cambiar
+              </button>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" @click="cerrarModal">Cancelar</button>
@@ -114,7 +141,7 @@
               type="button"
               class="btn btn-primary"
               @click="procesarCompra"
-              :disabled="cartStore.loading">
+              :disabled="cartStore.loading || !driverAsignado.trim()">
               {{ cartStore.loading ? 'Procesando...' : 'Confirmar Compra' }}
             </button>
           </div>
@@ -132,11 +159,16 @@ import { useCartStore } from '@/stores/CartStore';
 import { RouterLink } from 'vue-router';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios'; // agregado
 
 const cartStore = useCartStore();
 const router = useRouter();
 const mostrarModal = ref(false);
 const direccionIngresada = ref('');
+const ciudadIngresada = ref('');
+const codigoPostalIngresado = ref('');
+const driverAsignado = ref(''); // nuevo
+const asignandoDriver = ref(false); // nuevo: estado mientras se elige
 
 const increaseQuantity = (item) => {
   cartStore.actualizarCantidad(item.id, item.cantidad + 1);
@@ -150,11 +182,38 @@ const decreaseQuantity = (item) => {
   }
 };
 
-//FALTA TODA LA LOGICA DE CREAR ORDEN Y REDIRECCIONAR A PAGOS :) (JULIAN)
+// obtiene un driver aleatorio desde la API o crea uno fallback
+const obtenerDriverAleatorio = async () => {
+  asignandoDriver.value = true;
+  try {
+    // intenta obtener lista de drivers desde el backend (ajusta URL si es necesario)
+    const res = await axios.get('http://localhost:3000/api/drivers');
+    const drivers = Array.isArray(res.data) ? res.data : res.data?.drivers ?? [];
+    if (drivers.length) {
+      // si el objeto driver tiene id o _id, usarlo
+      const elegido = drivers[Math.floor(Math.random() * drivers.length)];
+      const id = elegido?.id ?? elegido?._id ?? elegido?.driverId ?? String(elegido);
+      driverAsignado.value = String(id);
+      return;
+    }
+  } catch (e) {
+    // no es crítico, caerá al fallback
+    console.warn('No se pudo obtener drivers desde API, usando fallback', e);
+  } finally {
+    asignandoDriver.value = false;
+  }
 
-const mostrarModalDireccion = () => {
+  // fallback: generar driverId aleatorio
+  driverAsignado.value = 'driver_' + Math.random().toString(36).slice(2, 9);
+};
+
+const mostrarModalDireccion = async () => {
   direccionIngresada.value = '';
+  ciudadIngresada.value = '';
+  codigoPostalIngresado.value = '';
+  driverAsignado.value = '';
   mostrarModal.value = true;
+  await obtenerDriverAleatorio(); // asigna driver automáticamente al abrir modal
 };
 
 const cerrarModal = () => {
@@ -163,12 +222,17 @@ const cerrarModal = () => {
 
 const procesarCompra = async () => {
   try {
-    await cartStore.finalizarCompra(direccionIngresada.value);
-    cerrarModal();
-    // Redirigir a página de confirmación o inicio
-    router.push('/confirmacion'); // Ajusta según tu ruta
+    const direccionCompleta = `${direccionIngresada.value}, ${ciudadIngresada.value}, ${codigoPostalIngresado.value}`;
+    const resultado = await cartStore.finalizarCompra(direccionCompleta, driverAsignado.value);
+
+    if (resultado && resultado.orderId) {
+      cerrarModal();
+      setTimeout(() => {
+        router.push('/payments');
+      }, 300);
+    }
   } catch (err) {
-    console.error('Error en compra:', err);
+    console.error('Error:', err);
   }
 };
 </script>
