@@ -25,6 +25,7 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue';
 import api from '@/api/api';
+import router from '@/router';
 
 const users = ref([]);
 const clientes = ref(0);
@@ -33,10 +34,22 @@ const drivers = ref(0);
 const admins = ref(0);
 
 onMounted(async () => {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+        router.push('/login');
+        return;
+    };
+
+    const user = await api.get(`/users/profile/${userId}`);
+    if (user.data.role !== 'backoffice') {
+        alert('No tienes permiso de entrar a este enlace. Redirigiendo al inicio.');
+        router.push('/');
+        return;
+    }
+
     try {
     const response = await api.get('/admin/list/all-users');
     users.value = response.data;
-
     // Contar roles
     vendedores.value = users.value.filter(user => user.role === 'vendor').length;
     clientes.value = users.value.filter(user => user.role === 'customer').length;

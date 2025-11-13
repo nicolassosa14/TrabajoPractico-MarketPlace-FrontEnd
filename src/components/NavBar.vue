@@ -104,17 +104,17 @@ const buscarLocales = () => {
                     <i class="bi bi-person me-2"></i><span>Perfil</span>
                   </router-link>
                 </li>
-                <li v-if="isDriver">
-                  <router-link class="dropdown-item" to="/driver-dashboard">
+                <li v-if="isDriver || isAdmin">
+                  <router-link class="dropdown-item" to="/driver">
                     <i class="bi bi-truck me-2"></i><span>Panel de Conductor</span>
                   </router-link>
                 </li>
-                <li v-if="isVendor">
+                <li v-if="isVendor || isAdmin">
                   <router-link class="dropdown-item" to="/vendor-orders">
                     <i class="bi bi-shop me-2"></i><span>Mis Órdenes (Vendedor)</span>
                   </router-link>
                 </li>
-                <li v-if="isVendor">
+                <li v-if="isVendor || isAdmin">
                   <router-link class="dropdown-item" to="/mi-local">
                     <i class="bi bi-shop me-2"></i><span>Ver mi local</span>
                   </router-link>

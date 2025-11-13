@@ -61,15 +61,14 @@ onMounted(() => {
 
     <div v-else class="row mt-4">
       <div v-for="product in products" :key="product.id" class="col-md-4 mb-4">
-        <div class="card h-100">
-
+        <div class="card h-100 shadow-sm ">
           <img
             v-if="product.image_url"
             :src="product.image_url"
             class="card-img-top product-image"
           />
-
           <div class="card-body d-flex flex-column">
+
             <h5 class="card-title">{{ product.name }}</h5>
             <p class="card-text">${{ product.price }}</p>
             <p class="card-text text-muted">{{ product.description }}</p>

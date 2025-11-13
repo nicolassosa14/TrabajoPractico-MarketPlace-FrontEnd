@@ -19,12 +19,18 @@ const error = ref(null);
 
 // ✅ Cargar categorías
 onMounted(async () => {
+  const userId = localStorage.getItem('userId');
+    if (!userId) {
+    router.push('/login');
+    return;
+  };
   try {
     const { data } = await api.get("/categories");
     categories.value = data;
   } catch (err) {
     error.value = "Error cargando categorías";
   }
+
 });
 
 // ✅ Enviar producto
@@ -55,7 +61,7 @@ const crearProducto = async () => {
 </script>
 
 <template>
-  <div class="container mt-4">
+  <div class="container mt-4 mb-5">
     <h2>Crear Producto</h2>
 
     <div v-if="error" class="alert alert-danger">{{ error }}</div>

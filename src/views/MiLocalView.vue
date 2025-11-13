@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { useGetData } from '@/composables/getData';
 import api from '@/api/api';
+import router from '@/router';
 
 const { getData: getUserData, data: userData } = useGetData();
 const { getData: getVendorData, data: vendorData } = useGetData();
@@ -13,7 +14,10 @@ const vendorId = ref(null);
 onMounted(async () => {
   const userId = localStorage.getItem('userId');
 
-  if (!userId) return;
+  if (!userId) {
+    router.push('/login');
+    return;
+  };
 
   await getUserData(`http://localhost:3000/api/users/profile/${userId}`);
 
@@ -55,6 +59,10 @@ onMounted(async () => {
       console.error('Error buscando local del vendedor:', error);
     }
   }
+  else {
+    alert('No tienes permiso de entrar a este enlace. Redirigiendo al inicio.');
+    router.push('/');
+  }
 });
 
 const vendorInfo = computed(() => {
@@ -95,7 +103,7 @@ const productsList = computed(() => {
 </script>
 
 <template>
-  <div class="container mt-5">
+  <div class="container mt-5 mb-5">
 
     <h1 class="mb-4">Mi Local</h1>
 
@@ -167,6 +175,9 @@ const productsList = computed(() => {
 
     <div class="row mt-3" v-else>
       <div v-for="prod in productsList" :key="prod.id" class="col-md-4 col-lg-3 mb-4">
+        <router-link to="/productos/crear" class="btn btn-danger mb-4">
+          Crear Nuevo Producto
+        </router-link>
         <div class="card h-100 p-2">
           <img v-if="prod.image_url" :src="prod.image_url" class="card-img-top"
             style="height: 200px; object-fit: cover;" />
