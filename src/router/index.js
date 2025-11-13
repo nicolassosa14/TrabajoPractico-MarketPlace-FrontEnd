@@ -1,15 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import ConfirmacionView from '@/views/ConfirmacionView.vue';
+import PaymentsView from '@/views/PaymentsView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-
     {
       path: '/payments',
       name: 'payments',
       component: () => import('../views/PaymentsView.vue'),
     },
-
     {
       path: '/',
       name: 'home',
@@ -93,9 +93,14 @@ const router = createRouter({
       props: true
     },
     {
-      path: "/mi-local",  
+      path: "/mi-local",
       name: "MiLocalView",
       component: () => import("../views/MiLocalView.vue"),
+    },
+    {
+      path: '/confirmacion',
+      name: 'confirmacion',
+      component: () => import('../views/ConfirmacionView.vue'),
     }
   ],
 })

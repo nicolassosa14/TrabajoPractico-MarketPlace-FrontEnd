@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import orderService from '@/services/orderService';
 
 export const useCartStore = defineStore('carrito', () => {
     const items = ref([]);
@@ -22,6 +21,7 @@ export const useCartStore = defineStore('carrito', () => {
         }
         actualizarLocalStorage();
     };
+
     const actualizarCantidad = (productoId, nuevaCantidad) => {
         const item = items.value.find(item => item.id === productoId);
         if (item) {
@@ -29,7 +29,6 @@ export const useCartStore = defineStore('carrito', () => {
             actualizarLocalStorage();
         }
     };
-
 
     const eliminarDelCarrito = (productoId) => {
         const index = items.value.findIndex(item => item.id === productoId);
@@ -48,14 +47,20 @@ export const useCartStore = defineStore('carrito', () => {
         localStorage.setItem('carrito', JSON.stringify(items.value));
     };
 
-    const finalizarCompra = async (direccion) => {
+    const finalizarCompra = async (direccionCompleta, driverId) => {
         if (items.value.length === 0) {
             error.value = 'Tu carrito está vacío';
             return null;
         }
 
-        if (!direccion || direccion.trim() === '') {
+        const direccionTrim = String(direccionCompleta ?? '').trim();
+        if (!direccionTrim) {
             error.value = 'Debes ingresar una dirección de envío';
+            return null;
+        }
+
+        if (!driverId || String(driverId).trim() === '') {
+            error.value = 'Debes asignar un driver';
             return null;
         }
 
@@ -63,6 +68,9 @@ export const useCartStore = defineStore('carrito', () => {
         error.value = null;
 
         try {
+            // Simular delay de procesamiento
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
             // calcular montos
             const subtotal = items.value.reduce((s, item) => {
                 const price = Number(item.precio ?? item.price ?? 0);
@@ -70,38 +78,57 @@ export const useCartStore = defineStore('carrito', () => {
                 return s + (Number.isFinite(price) && Number.isFinite(qty) ? price * qty : 0);
             }, 0);
 
-            const deliveryFee = 0; // ajustar si corresponde
-            const discountApplied = 0; // ajustar si corresponde
-            const taxes = 0; // ajustar si corresponde
+            const deliveryFee = 1500;
+            const discountApplied = 0;
+            const taxes = 0;
             const totalAmount = subtotal + deliveryFee - discountApplied + taxes;
 
-            // obtener userId/vendorId/addressId según tu app
-            const userFromStorage = JSON.parse(localStorage.getItem('user') || 'null');
-            const userId = userFromStorage?.id ? String(userFromStorage.id) : 'guest';
-            const vendorId = String(items.value[0]?.vendorId ?? items.value[0]?.vendor ?? 'unknown-vendor');
-            const addressId = 'manual-' + Date.now(); // si tienes IDs reales, úsalos
-
-            // payload ajustado a lo que acepta la API (sin address, createdAt, items)
+            // Generar orden simulada
+            const orderId = 'ORD-' + Date.now();
             const pedido = {
-                userId: String(userId),
-                vendorId: String(vendorId),
-                addressId: String(addressId),
+                orderId,
+                userId: 'user-123',
+                vendorId: String(items.value[0]?.vendorId ?? 'vendor-001'),
+                addressId: 'addr-' + Date.now(),
                 subtotal: Number(subtotal),
                 deliveryFee: Number(deliveryFee),
                 discountApplied: Number(discountApplied),
                 taxes: Number(taxes),
                 totalAmount: Number(totalAmount),
-                status: 'pending' // pending, confirmed, preparing, out_for_delivery, delivered, cancelled
+                status: 'pending',
+                driverId: String(driverId),
+                direccion: direccionCompleta,
+                items: items.value.map(item => ({
+                    id: item.id,
+                    nombre: item.name,
+                    precio: Number(item.precio ?? item.price ?? 0),
+                    cantidad: item.cantidad,
+                    subtotal: (Number(item.precio ?? item.price ?? 0) * item.cantidad)
+                })),
+                createdAt: new Date().toISOString()
             };
 
-            const respuesta = await orderService.crearOrden(pedido);
+            console.log('📦 Orden creada:', pedido);
+
+            // Guardar orden en localStorage (simulación de BD)
+            const ordenes = JSON.parse(localStorage.getItem('ordenes') || '[]');
+            ordenes.push(pedido);
+            localStorage.setItem('ordenes', JSON.stringify(ordenes));
+
+            console.log('✅ Orden guardada en localStorage');
+
+            // Guardar orden actual para usar en pagos
+            localStorage.setItem('currentOrder', JSON.stringify(pedido));
+
+            console.log('✅ currentOrder guardado en localStorage');
+            console.log('Contenido currentOrder:', localStorage.getItem('currentOrder'));
 
             vaciarCarrito();
             loading.value = false;
 
-            return respuesta;
+            return { apiResponse: pedido, orderId };
         } catch (err) {
-            error.value = 'Error al procesar la compra: ' + (err.response?.data?.message || err.message);
+            error.value = 'Error al procesar la compra: ' + err.message;
             loading.value = false;
             throw err;
         }
