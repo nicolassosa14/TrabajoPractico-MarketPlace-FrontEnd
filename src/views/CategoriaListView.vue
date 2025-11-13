@@ -13,8 +13,6 @@ const errorProducts = ref(null)
 const vendorId = ref(route.params.id || null)
 const vendorName = ref('')
 const cartStore = useCartStore()
-
-
 const sortOption = ref('none')
 
 
