@@ -187,7 +187,6 @@ const buscarLocales = () => {
   left: 0;
   width: 100%;
   z-index: 1030;
-  /* A common z-index for navbars */
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
   background-color: var(--light-red) !important;

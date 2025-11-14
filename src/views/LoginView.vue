@@ -30,13 +30,11 @@ const onSubmit = async (values) => {
       email: values.email,
       password: values.password
     };
-    // Lógica de inicio de sesión
     await PostData('http://localhost:3000/api/users/login', loginValues);
     authStore.login(responseData.value.user);
     router.push('/');
     return;
   }
-  // Lógica de registro
   const registerValues = {
     first_name: values.nombre,
     last_name: values.apellido,
@@ -62,7 +60,6 @@ const toggleForm = () => {
             <h2 class="text-center mb-4">{{ isLogin ? 'Iniciar Sesión' : 'Registro' }}</h2>
             
             <Form @submit="onSubmit" :validation-schema="isLogin ? loginSchema : registerSchema" v-slot="{ errors }">
-              <!-- Campos solo para registro -->
               <template v-if="!isLogin">
                 <div class="mb-3">
                   <label for="nombre" class="form-label">Nombre</label>
@@ -77,7 +74,6 @@ const toggleForm = () => {
                 </div>
               </template>
 
-              <!-- Campos comunes -->
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <Field name="email" type="email" class="form-control" :class="{ 'is-invalid': errors.email }" />

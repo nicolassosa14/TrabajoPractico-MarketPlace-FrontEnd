@@ -29,6 +29,6 @@ import Footer from './components/Footer.vue';
 }
 .main-content {
   flex-grow: 1;
-  padding-top: 70px; /* Adjust this value to match the navbar's height */
+  padding-top: 70px;
 }
 </style>

@@ -5,7 +5,6 @@
         <h1 class="card-title text-center mb-4" style="color: var(--primary-red);">Resumen de tu Orden</h1>
 
         <div v-if="orderActual">
-          <!-- Resumen de Orden -->
           <div class="card mb-4 border-0 bg-light">
             <div class="card-body">
               <h5 class="card-title">📦 Detalles de tu Pedido</h5>
@@ -22,7 +21,6 @@
             </div>
           </div>
 
-          <!-- Métodos de Pago -->
           <div class="mb-4">
             <h5 class="mb-3">💳 Selecciona un método de pago:</h5>
             <div class="row">
@@ -73,7 +71,6 @@
             </div>
           </div>
 
-          <!-- Botones -->
           <div class="d-grid gap-2 mt-4">
             <button
               class="btn btn-success btn-lg"
@@ -117,10 +114,8 @@ const confirmarPago = async () => {
 
   procesando.value = true;
 
-  // Simular procesamiento
   await new Promise(resolve => setTimeout(resolve, 2000));
 
-  // Guardar pago
   const pago = {
     orderId: orderActual.value.orderId,
     metodoPago: metodoPago.value,
@@ -137,7 +132,6 @@ const confirmarPago = async () => {
 
   procesando.value = false;
 
-  // Redirigir a confirmación
   router.push(`/confirmacion?orderId=${orderActual.value.orderId}`);
 };
 

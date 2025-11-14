@@ -44,7 +44,6 @@
       </div>
     </div>
 
-    <!-- Modal para agregar vehículo -->
     <ModalAgregarVehiculo
       :show="showAddVehicleModal"
       :userId="userId"
@@ -98,7 +97,6 @@ const handleAvailabilityChange = async (vehicle, newValue) => {
   } catch (error) {
     console.error('Error al actualizar la disponibilidad del vehículo:', error);
     alert('No se pudo actualizar la disponibilidad. Inténtalo de nuevo.');
-    // Revertir el cambio en la UI si la API falla
     vehicle.is_available = originalValue;
   }
 };

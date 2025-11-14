@@ -17,8 +17,7 @@ const router = useRouter();
 const userEmail = ref('');
 
 onMounted(() => {
-  // Recuperar el email del usuario del almacenamiento local o estado
-  const tempEmail = localStorageetItem('tempEmail');
+  const tempEmail = localStorage.getItem('tempEmail');
   if (!tempEmail) {
     router.push('/login');
     return;

@@ -1,44 +1,40 @@
 <template>
   <div class="container mt-5">
     <h1 class="mb-4">Órdenes de Mi Local</h1>
-    <div v-if="loading" class="text-center">
-      <div class="spinner-border text-danger" role="status">
-        <span class="visually-hidden">Cargando...</span>
-      </div>
-    </div>
-    <div v-else-if="error" class="alert alert-danger">
-      Error al cargar las órdenes: {{ error.message }}
-    </div>
-    <div v-else-if="!orders || orders.length === 0" class="alert alert-info">
+    <div v-if="orders.length === 0" class="alert alert-info">
       Aún no tienes órdenes.
     </div>
     <div v-else>
       <div class="accordion" id="ordersAccordion">
-        <div v-for="order in orders" :key="order.id" class="accordion-item mb-3">
-          <h2 class="accordion-header" :id="'heading' + order.id">
+        <div v-for="order in orders" :key="order.orderId" class="accordion-item mb-3">
+          <h2 class="accordion-header" :id="'heading' + order.orderId">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              :data-bs-target="'#collapse' + order.id" aria-expanded="false" :aria-controls="'collapse' + order.id">
+              :data-bs-target="'#collapse' + order.orderId" aria-expanded="false" :aria-controls="'collapse' + order.orderId">
               <div class="d-flex justify-content-between w-100">
-                <span>Orden #{{ order.id }} - Cliente: {{ order.user.name }}</span>
-                <span class="badge bg-primary me-3">{{ order.status }}</span>
+                <span>Orden #{{ order.orderId }} - Estado: <span class="badge bg-primary me-3">{{ order.status }}</span></span>
+                <span>Total: ${{ order.totalAmount }}</span>
               </div>
             </button>
           </h2>
-          <div :id="'collapse' + order.id" class="accordion-collapse collapse" :aria-labelledby="'heading' + order.id"
+          <div :id="'collapse' + order.orderId" class="accordion-collapse collapse" :aria-labelledby="'heading' + order.orderId"
             data-bs-parent="#ordersAccordion">
             <div class="accordion-body">
-              <p><strong>Fecha:</strong> {{ new Date(order.createdAt).toLocaleDateString() }}</p>
-              <p><strong>Dirección de Envío:</strong> {{ order.address }}</p>
+              <p><strong>Fecha:</strong> {{ new Date(order.createdAt).toLocaleString() }}</p>
+              <p><strong>Dirección de Envío:</strong> {{ order.direccion }}</p>
               <h5>Productos</h5>
               <ul class="list-group">
-                <li v-for="item in order.items" :key="item.productId"
+                <li v-for="(item, idx) in order.items" :key="item.id || idx"
                   class="list-group-item d-flex justify-content-between align-items-center">
-                  {{ item.product.name }}
-                  <span>Cantidad: {{ item.quantity }}</span>
-                  <span>Precio: ${{ item.price }}</span>
+                  <span>{{ item.nombre || 'Producto' }}</span>
+                  <span>Cantidad: {{ item.cantidad }}</span>
+                  <span>Precio: ${{ item.precio }}</span>
                 </li>
               </ul>
-              <h5 class="mt-3">Total: ${{ order.total }}</h5>
+              <h5 class="mt-3">Subtotal: ${{ order.subtotal }}</h5>
+              <h6>Envío: ${{ order.deliveryFee }}</h6>
+              <h6>Descuento: ${{ order.discountApplied }}</h6>
+              <h6>Impuestos: ${{ order.taxes }}</h6>
+              <h5 class="mt-2">Total: ${{ order.totalAmount }}</h5>
             </div>
           </div>
         </div>
@@ -48,16 +44,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useAuthStore } from '@/stores/auth';
-import { useGetData } from '@/composables/getData';
+import { ref, onMounted } from 'vue';
 
-const authStore = useAuthStore();
-const { getData, data: orders, loading, error } = useGetData();
-orders.value = [];
-const { getData: getUserData, data: userData } = useGetData();
+const orders = ref([]);
 
-const localId = ref(null);
+onMounted(() => {
+  const stored = localStorage.getItem('ordenes');
+  if (stored) {
+    try {
+      orders.value = JSON.parse(stored);
+    } catch (e) {
+      orders.value = [];
+    }
+  }
+});
 
 onMounted(async () => {
   const userId = localStorage.getItem('userId');

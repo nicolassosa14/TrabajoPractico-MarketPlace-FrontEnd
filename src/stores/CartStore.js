@@ -6,7 +6,6 @@ export const useCartStore = defineStore('carrito', () => {
     const loading = ref(false);
     const error = ref(null);
 
-    // Recuperar del localStorage al inicializar
     if (localStorage.getItem('carrito')) {
         items.value = JSON.parse(localStorage.getItem('carrito'));
     }
@@ -68,10 +67,8 @@ export const useCartStore = defineStore('carrito', () => {
         error.value = null;
 
         try {
-            // Simular delay de procesamiento
             await new Promise(resolve => setTimeout(resolve, 1500));
 
-            // calcular montos
             const subtotal = items.value.reduce((s, item) => {
                 const price = Number(item.precio ?? item.price ?? 0);
                 const qty = Number(item.cantidad ?? 0);
@@ -83,7 +80,6 @@ export const useCartStore = defineStore('carrito', () => {
             const taxes = 0;
             const totalAmount = subtotal + deliveryFee - discountApplied + taxes;
 
-            // Generar orden simulada
             const orderId = 'ORD-' + Date.now();
             const pedido = {
                 orderId,
@@ -110,14 +106,12 @@ export const useCartStore = defineStore('carrito', () => {
 
             console.log('📦 Orden creada:', pedido);
 
-            // Guardar orden en localStorage (simulación de BD)
             const ordenes = JSON.parse(localStorage.getItem('ordenes') || '[]');
             ordenes.push(pedido);
             localStorage.setItem('ordenes', JSON.stringify(ordenes));
 
             console.log('✅ Orden guardada en localStorage');
 
-            // Guardar orden actual para usar en pagos
             localStorage.setItem('currentOrder', JSON.stringify(pedido));
 
             console.log('✅ currentOrder guardado en localStorage');

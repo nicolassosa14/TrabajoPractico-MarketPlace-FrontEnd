@@ -2,7 +2,6 @@
   <div class="container my-5">
     <div class="card shadow-lg border-0">
       <div class="card-body text-center py-5">
-        <!-- Icono de éxito -->
         <div style="font-size: 5rem; color: #28a745; margin-bottom: 20px;">
           ✅
         </div>
@@ -10,7 +9,6 @@
         <h1 class="card-title mb-2" style="color: var(--primary-red);">¡Pago Realizado Exitosamente!</h1>
         <p class="text-muted mb-4">Tu orden ha sido confirmada y está siendo preparada</p>
 
-        <!-- Detalles de la orden -->
         <div v-if="orderData" class="alert alert-success mb-4">
           <div class="row">
             <div class="col-md-6">
@@ -33,13 +31,11 @@
           <p><strong>Dirección de Entrega:</strong><br>{{ orderData.direccion }}</p>
         </div>
 
-        <!-- Información adicional -->
         <div class="alert alert-info">
           <h6>📍 Tu pedido será entregado en aproximadamente <strong>30-45 minutos</strong></h6>
           <p class="mb-0">Recibirás una notificación cuando el driver esté en camino</p>
         </div>
 
-        <!-- Botón -->
         <button class="btn btn-primary btn-lg mt-4" @click="irAlInicio">
           Volver a la Tienda
         </button>

@@ -12,7 +12,7 @@ const image_url = ref("");
 const is_available = ref(true);
 
 const categories = ref([]);
-const selectedCategory = ref('');
+const selectedCategory = ref(null);
 const vendorId = ref(null);
 const userId = ref(null);
 const loading = ref(false);
@@ -34,7 +34,6 @@ onMounted(async () => {
 
     const { data: userData } = await api.get(`/users/profile/${userId}`);
 
-    userId.value = userData?.id?.toString() || null;
     console.log('userId:', userId.value);
 
     vendorId.value =
@@ -83,15 +82,15 @@ const crearProducto = async () => {
   }
 
 
-  if (selectedCategory.value === null || selectedCategory.value === undefined || selectedCategory.value === '') {
+  if (!selectedCategory.value) {
     error.value = "Por favor, selecciona una categoría.";
     loading.value = false;
     return;
   }
 
   try {
-
-    const categoryId = selectedCategory.value ? String(selectedCategory.value) : null;
+    const categoryId = selectedCategory.value?.user_id || selectedCategory.value?.id || selectedCategory.value;
+    const categoryName = selectedCategory.value?.name || '';
 
     if (!categoryId) {
       error.value = "Por favor, selecciona una categoría válida.";
@@ -106,11 +105,13 @@ const crearProducto = async () => {
       price: Number(price.value),
       is_available: is_available.value,
       vendor_id: String(vendorId.value),
-      category_ids: categoryId
+      category_ids: String(categoryId),
     };
 
     console.log('Payload a enviar:', payload);
     console.log('selectedCategory.value:', selectedCategory.value);
+    console.log('categoryId enviado:', categoryId);
+    console.log('categoryName enviado:', categoryName);
 
     await api.post("/products", payload);
 
@@ -178,12 +179,14 @@ const crearProducto = async () => {
       <div class="mb-3">
         <label class="form-label">Categoría <span class="text-danger">*</span></label>
         <select v-model="selectedCategory" class="form-select" required>
-          <option disabled :value="''">Seleccione una categoría</option>
-          <option v-for="cat in categories" :key="cat.id" :value="String(cat.id)">
+          <option disabled :value="null">Seleccione una categoría</option>
+          <option v-for="cat in categories" :key="cat.id" :value="cat">
             {{ cat.name }}
           </option>
         </select>
-        <small v-if="selectedCategory" class="text-muted">Categoría seleccionada: {{ selectedCategory }}</small>
+        <small v-if="selectedCategory" class="text-muted">
+          Categoría seleccionada: {{ selectedCategory?.name }} 
+        </small>
       </div>
 
       <button type="submit" class="btn btn-success" :disabled="loading">

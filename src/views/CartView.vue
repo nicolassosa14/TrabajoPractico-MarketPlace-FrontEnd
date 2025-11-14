@@ -162,7 +162,6 @@
       </div>
     </div>
 
-    <!-- Backdrop del modal -->
     <div v-if="mostrarModal" class="modal-backdrop fade show"></div>
   </div>
 </template>
@@ -172,7 +171,7 @@ import { useCartStore } from '@/stores/CartStore';
 import { RouterLink } from 'vue-router';
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios'; // agregado
+import axios from 'axios';
 import { useAuthStore } from '@/stores/auth';
 
 const cartStore = useCartStore();
@@ -204,28 +203,23 @@ const decreaseQuantity = (item) => {
   }
 };
 
-// obtiene un driver aleatorio desde la API o crea uno fallback
 const obtenerDriverAleatorio = async () => {
   asignandoDriver.value = true;
   try {
-    // intenta obtener lista de drivers desde el backend (ajusta URL si es necesario)
     const res = await axios.get('http://localhost:3000/api/drivers');
     const drivers = Array.isArray(res.data) ? res.data : res.data?.drivers ?? [];
     if (drivers.length) {
-      // si el objeto driver tiene id o _id, usarlo
       const elegido = drivers[Math.floor(Math.random() * drivers.length)];
       const id = elegido?.id ?? elegido?._id ?? elegido?.driverId ?? String(elegido);
       driverAsignado.value = String(id);
       return;
     }
   } catch (e) {
-    // no es crítico, caerá al fallback
     console.warn('No se pudo obtener drivers desde API, usando fallback', e);
   } finally {
     asignandoDriver.value = false;
   }
 
-  // fallback: generar driverId aleatorio
   driverAsignado.value = 'driver_' + Math.random().toString(36).slice(2, 9);
 };
 

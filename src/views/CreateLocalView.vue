@@ -21,7 +21,7 @@ const crearLocal = async () => {
   try {
     const { data } = await api.post('/vendor', form.value)
     console.log("Local creado:", data)
-    router.push('/locales')   // volver al listado
+    router.push('/locales')
   } catch (err) {
     error.value = "No se pudo crear el local."
     console.error(err)

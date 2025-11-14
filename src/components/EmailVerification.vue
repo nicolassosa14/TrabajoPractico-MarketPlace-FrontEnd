@@ -80,7 +80,6 @@ const handleResendEmail = async () => {
   }
 };
 
-// Verificar estado inicial
 onMounted(async () => {
   try {
     const { data, error } = await PostData('http://localhost:3000/api/users/verification-status', {

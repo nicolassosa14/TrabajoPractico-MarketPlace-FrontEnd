@@ -43,7 +43,7 @@ const toggleSwitch = () => {
 }
 
 .switch-container.active {
-  background-color: rgba(10, 200, 110, 0.4); /* Active color */
+  background-color: rgba(10, 200, 110, 0.4);
 }
 
 .switch-handle {

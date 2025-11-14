@@ -60,14 +60,12 @@ const refreshUserData = () => {
   }
 };
 
-// Computed para verificar si el usuario es vendor y no tiene local asignado
 const canCreateLocal = computed(() => {
   if (!data.value) return false;
 
   const isVendor = data.value.role === 'vendor' || data.value.role === 'backoffice';
   if (!isVendor) return false;
 
-  // Verificamos si tiene un local asignado (distintas variantes posibles)
   const hasLocal =
     data.value.vendor_id ||
     data.value.vendorId ||
@@ -75,7 +73,7 @@ const canCreateLocal = computed(() => {
     data.value.localId ||
     data.value.vendor;
 
-  return !hasLocal; // Solo puede crear si NO tiene local
+  return !hasLocal;
 });
 
 onMounted(() => {
@@ -119,7 +117,6 @@ onMounted(() => {
             </template>
           </p>
 
-          <!-- Modal para agregar/editar número de teléfono -->
           <div v-if="showPhoneModal" class="modal fade show" style="display: block; background: rgba(0,0,0,0.5)">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
@@ -154,7 +151,6 @@ onMounted(() => {
           </p>
         </div>
 
-        <!-- Botón para crear local (solo si es vendor y no tiene local asignado) -->
         <div v-if="canCreateLocal" class="mt-4 mb-4">
           <div class="alert alert-info d-flex align-items-center justify-content-between">
             <div>
